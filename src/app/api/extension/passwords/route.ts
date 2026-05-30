@@ -1,4 +1,5 @@
 import { decryptPassword } from "@/lib/encryption";
+import { buildAutofillHints } from "@/lib/autofill";
 import { handleError, json, options } from "@/lib/http";
 import { getPrisma } from "@/lib/prisma";
 import { hashSessionToken } from "@/lib/sessionToken";
@@ -34,6 +35,10 @@ export async function GET(request: Request) {
       phone: password.phone,
       notes: password.notes,
       password: decryptPassword(password),
+      autofill: buildAutofillHints({
+        platformName: password.platformName,
+        websiteUrl: password.websiteUrl,
+      }),
       updatedAt: password.updatedAt,
     }));
 
