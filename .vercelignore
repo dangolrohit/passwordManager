@@ -1,0 +1,6 @@
+.env
+.env.*
+.env*
+.next
+node_modules
+dev-server*.log
