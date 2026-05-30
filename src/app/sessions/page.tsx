@@ -20,7 +20,7 @@ export default function SessionsPage() {
   }, []);
 
   async function revoke(id: string) {
-    await api(`/api/admin/sessions/${id}/revoke`, { method: "POST" });
+    await api(`/api/parent/sessions/${id}/revoke`, { method: "POST" });
     await load();
   }
 
@@ -31,7 +31,7 @@ export default function SessionsPage() {
           <h1 className="text-2xl font-semibold">Extension Sessions</h1>
           <p className="mt-1 text-sm text-slate-400">Review and revoke extension sessions created by one-time API key login.</p>
         </header>
-        <div className="divide-y divide-slate-800 rounded-md border border-slate-800">
+        <div className="glass-panel divide-y divide-white/10 rounded-md">
           {sessions.map((session) => (
             <div key={session.id} className="grid gap-3 px-4 py-3 text-sm md:grid-cols-5">
               <strong>{session.familyMember.name}</strong>

@@ -1,5 +1,5 @@
 import { createAuditLog } from "@/lib/audit";
-import { requireAdmin } from "@/lib/auth";
+import { requireParent } from "@/lib/auth";
 import { encryptPassword } from "@/lib/encryption";
 import { handleError, json, options } from "@/lib/http";
 import { getPrisma } from "@/lib/prisma";
@@ -24,7 +24,7 @@ export async function OPTIONS() {
 
 export async function GET() {
   try {
-    const user = await requireAdmin();
+    const user = await requireParent();
     const passwords = await getPrisma().passwordItem.findMany({
       where: { adminId: user.id },
       select: publicPasswordSelect,
@@ -38,7 +38,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const user = await requireAdmin();
+    const user = await requireParent();
     const body = passwordSchema.parse(await request.json());
     const encrypted = encryptPassword(body.password);
     const password = await getPrisma().passwordItem.create({
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
       },
       select: publicPasswordSelect,
     });
-    await createAuditLog({ adminId: user.id, actorType: "admin", actorName: user.name, action: "password_created", passwordId: password.id });
+    await createAuditLog({ adminId: user.id, actorType: "parent", actorName: user.name, action: "password_created", passwordId: password.id });
     return json({ password }, 201);
   } catch (error) {
     return handleError(error);

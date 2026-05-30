@@ -1,12 +1,12 @@
 import { createAuditLog } from "@/lib/audit";
-import { requireAdmin } from "@/lib/auth";
+import { requireParent } from "@/lib/auth";
 import { handleError, json } from "@/lib/http";
 import { getPrisma } from "@/lib/prisma";
 import { assignmentSchema } from "@/lib/schemas";
 
 export async function GET() {
   try {
-    const user = await requireAdmin();
+    const user = await requireParent();
     const assignments = await getPrisma().assignedPassword.findMany({
       where: { assignedById: user.id },
       include: {
@@ -23,7 +23,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const user = await requireAdmin();
+    const user = await requireParent();
     const body = assignmentSchema.parse(await request.json());
     const member = await getPrisma().familyMember.findFirst({ where: { id: body.familyMemberId, adminId: user.id } });
     if (!member) return json({ error: "Family member not found" }, 404);
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
 
     await createAuditLog({
       adminId: user.id,
-      actorType: "admin",
+      actorType: "parent",
       actorName: user.name,
       action: "password_assigned",
       familyMemberId: body.familyMemberId,

@@ -3,7 +3,7 @@ import { getPrisma } from "@/lib/prisma";
 
 type AuditInput = {
   adminId: string;
-  actorType: "admin" | "extension";
+  actorType: "parent" | "extension";
   actorName: string;
   action: string;
   passwordId?: string;

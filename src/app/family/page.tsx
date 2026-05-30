@@ -7,7 +7,7 @@ export default function FamilyPage() {
   return (
     <AppShell>
       <ResourcePage
-        title="Manage Family"
+        title="Family"
         description="Add family members that can receive password assignments and one-time API keys."
         endpoint="/api/family"
         listKey="family"

@@ -51,17 +51,17 @@ export default function AssignmentsPage() {
     <AppShell>
       <section className="grid gap-6">
         <header>
-          <h1 className="text-2xl font-semibold">Assign Passwords</h1>
-          <p className="mt-1 text-sm text-slate-400">Assign multiple passwords to one family member in a single request.</p>
+          <h1 className="text-2xl font-semibold">Access</h1>
+          <p className="mt-1 text-sm text-slate-400">Share multiple passwords with one family member.</p>
         </header>
-        <form onSubmit={submit} className="grid gap-4 rounded-md border border-slate-800 bg-slate-900 p-4">
-          <select name="familyMemberId" required className="h-10 rounded-md border border-slate-700 bg-slate-950 px-3">
+        <form onSubmit={submit} className="glass-panel grid gap-4 rounded-md p-4">
+          <select name="familyMemberId" required className="glass-field h-10 rounded-md px-3">
             <option value="">Select family member</option>
             {family.map((member) => <option key={member.id} value={member.id}>{member.name} ({member.relation})</option>)}
           </select>
           <div className="grid gap-2 md:grid-cols-2">
             {passwords.map((password) => (
-              <label key={password.id} className="flex items-center gap-2 rounded-md border border-slate-800 bg-slate-950 p-3 text-sm">
+              <label key={password.id} className="glass-field flex items-center gap-2 rounded-md p-3 text-sm">
                 <input type="checkbox" name="passwordIds" value={password.id} />
                 <span>{password.platformName}</span>
                 <span className="text-slate-500">{password.websiteUrl}</span>
@@ -73,9 +73,9 @@ export default function AssignmentsPage() {
             {message && <span className="text-sm text-slate-400">{message}</span>}
           </div>
         </form>
-        <div className="rounded-md border border-slate-800">
-          <h2 className="border-b border-slate-800 bg-slate-900 px-4 py-3 text-sm font-medium">Current assignments</h2>
-          <div className="divide-y divide-slate-800">
+        <div className="glass-panel rounded-md">
+          <h2 className="border-b border-white/10 px-4 py-3 text-sm font-medium">Current access</h2>
+          <div className="divide-y divide-white/10">
             {assignments.map((assignment) => (
               <div key={assignment.id} className="grid gap-1 px-4 py-3 text-sm sm:grid-cols-3">
                 <strong>{assignment.familyMember.name}</strong>

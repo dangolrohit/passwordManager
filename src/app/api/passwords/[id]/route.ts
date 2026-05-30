@@ -1,5 +1,5 @@
 import { createAuditLog } from "@/lib/audit";
-import { requireAdmin } from "@/lib/auth";
+import { requireParent } from "@/lib/auth";
 import { encryptPassword } from "@/lib/encryption";
 import { handleError, json } from "@/lib/http";
 import { getPrisma } from "@/lib/prisma";
@@ -21,7 +21,7 @@ const select = {
 
 export async function GET(_: Request, ctx: Ctx) {
   try {
-    const user = await requireAdmin();
+    const user = await requireParent();
     const { id } = await ctx.params;
     const password = await getPrisma().passwordItem.findFirst({ where: { id, adminId: user.id }, select });
     return password ? json({ password }) : json({ error: "Password not found" }, 404);
@@ -32,7 +32,7 @@ export async function GET(_: Request, ctx: Ctx) {
 
 export async function PUT(request: Request, ctx: Ctx) {
   try {
-    const user = await requireAdmin();
+    const user = await requireParent();
     const { id } = await ctx.params;
     const body = passwordSchema.parse(await request.json());
     const existing = await getPrisma().passwordItem.findFirst({ where: { id, adminId: user.id }, select: { id: true } });
@@ -50,7 +50,7 @@ export async function PUT(request: Request, ctx: Ctx) {
       },
       select,
     });
-    await createAuditLog({ adminId: user.id, actorType: "admin", actorName: user.name, action: "password_updated", passwordId: id });
+    await createAuditLog({ adminId: user.id, actorType: "parent", actorName: user.name, action: "password_updated", passwordId: id });
     return json({ password: updated });
   } catch (error) {
     return handleError(error);
@@ -59,12 +59,12 @@ export async function PUT(request: Request, ctx: Ctx) {
 
 export async function DELETE(_: Request, ctx: Ctx) {
   try {
-    const user = await requireAdmin();
+    const user = await requireParent();
     const { id } = await ctx.params;
     const existing = await getPrisma().passwordItem.findFirst({ where: { id, adminId: user.id }, select: { id: true } });
     if (!existing) return json({ error: "Password not found" }, 404);
     await getPrisma().passwordItem.delete({ where: { id } });
-    await createAuditLog({ adminId: user.id, actorType: "admin", actorName: user.name, action: "password_deleted", passwordId: id });
+    await createAuditLog({ adminId: user.id, actorType: "parent", actorName: user.name, action: "password_deleted", passwordId: id });
     return json({ ok: true });
   } catch (error) {
     return handleError(error);

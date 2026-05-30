@@ -1,11 +1,12 @@
-import { requireAdmin } from "@/lib/auth";
+import { requireParent } from "@/lib/auth";
 import { handleError, json } from "@/lib/http";
 import { getPrisma } from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const user = await requireAdmin();
+    const user = await requireParent();
     const prisma = getPrisma();
+    const healthStartedAt = Date.now();
     const [totalPasswords, totalFamilyMembers, assignedPasswords, activeExtensionSessions, recentAuditLogs] =
       await Promise.all([
         prisma.passwordItem.count({ where: { adminId: user.id } }),
@@ -20,7 +21,20 @@ export async function GET() {
         }),
       ]);
 
-    return json({ totalPasswords, totalFamilyMembers, assignedPasswords, activeExtensionSessions, recentAuditLogs });
+    await prisma.$queryRaw`SELECT 1`;
+
+    return json({
+      totalPasswords,
+      totalFamilyMembers,
+      assignedPasswords,
+      activeExtensionSessions,
+      recentAuditLogs,
+      health: {
+        hosting: "online",
+        database: "connected",
+        latencyMs: Date.now() - healthStartedAt,
+      },
+    });
   } catch (error) {
     return handleError(error);
   }

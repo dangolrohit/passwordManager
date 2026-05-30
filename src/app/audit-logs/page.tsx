@@ -18,9 +18,9 @@ export default function AuditLogsPage() {
       <section className="grid gap-6">
         <header>
           <h1 className="text-2xl font-semibold">Audit Logs</h1>
-          <p className="mt-1 text-sm text-slate-400">Important admin and extension actions.</p>
+          <p className="mt-1 text-sm text-slate-400">Important parent and extension actions.</p>
         </header>
-        <div className="divide-y divide-slate-800 rounded-md border border-slate-800">
+        <div className="glass-panel divide-y divide-white/10 rounded-md">
           {logs.map((log) => (
             <div key={log.id} className="grid gap-1 px-4 py-3 text-sm sm:grid-cols-4">
               <strong>{log.action}</strong>

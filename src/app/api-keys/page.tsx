@@ -43,31 +43,44 @@ export default function ApiKeysPage() {
     }
   }
 
+  async function revoke(id: string) {
+    try {
+      await api(`/api/api-keys/${id}`, { method: "DELETE" });
+      setMessage("Key revoked");
+      await load();
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Revoke failed");
+    }
+  }
+
   return (
     <AppShell>
       <section className="grid gap-6">
         <header>
           <h1 className="text-2xl font-semibold">API Keys</h1>
-          <p className="mt-1 text-sm text-slate-400">Generate one-time keys for future extension login.</p>
+          <p className="mt-1 text-sm text-slate-400">Generate and revoke one-time keys for future extension login.</p>
         </header>
-        <form onSubmit={submit} className="flex flex-wrap items-center gap-3 rounded-md border border-slate-800 bg-slate-900 p-4">
-          <select name="familyMemberId" required className="h-10 rounded-md border border-slate-700 bg-slate-950 px-3">
+        <form onSubmit={submit} className="glass-panel flex flex-wrap items-center gap-3 rounded-md p-4">
+          <select name="familyMemberId" required className="glass-field h-10 rounded-md px-3">
             <option value="">Select family member</option>
-            {family.map((member) => <option key={member.id} value={member.id}>{member.name}</option>)}
+            {family.map((member) => (
+              <option key={member.id} value={member.id}>{member.name}</option>
+            ))}
           </select>
           <Button>Generate Key</Button>
           {message && <span className="text-sm text-slate-400">{message}</span>}
         </form>
-        {oneTimeKey && <code className="block overflow-x-auto rounded-md border border-teal-900 bg-teal-950 p-4 text-sm text-teal-100">{oneTimeKey}</code>}
-        <div className="rounded-md border border-slate-800">
-          <h2 className="border-b border-slate-800 bg-slate-900 px-4 py-3 text-sm font-medium">Generated keys</h2>
-          <div className="divide-y divide-slate-800">
+        {oneTimeKey && <code className="glass-panel block overflow-x-auto rounded-md p-4 text-sm text-teal-100">{oneTimeKey}</code>}
+        <div className="glass-panel rounded-md">
+          <h2 className="border-b border-white/10 px-4 py-3 text-sm font-medium">Generated keys</h2>
+          <div className="divide-y divide-white/10">
             {apiKeys.map((key) => (
-              <div key={key.id} className="grid gap-1 px-4 py-3 text-sm sm:grid-cols-4">
+              <div key={key.id} className="grid gap-3 px-4 py-3 text-sm sm:grid-cols-5">
                 <strong>{key.keyPrefix}</strong>
                 <span className="text-slate-400">{key.familyMember.name}</span>
                 <span>{key.isUsed ? "Used" : "Unused"}</span>
                 <span className="text-slate-500">{new Date(key.createdAt).toLocaleString()}</span>
+                <Button variant="danger" onClick={() => revoke(key.id)}>Revoke</Button>
               </div>
             ))}
           </div>

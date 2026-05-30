@@ -16,3 +16,26 @@ body {
   background: var(--background);
   color: var(--foreground);
 }
+
+.glass-shell {
+  background:
+    radial-gradient(circle at top left, rgba(20, 184, 166, 0.14), transparent 28rem),
+    radial-gradient(circle at bottom right, rgba(244, 114, 182, 0.1), transparent 24rem),
+    #020617;
+}
+
+.glass-panel {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(15, 23, 42, 0.58);
+  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(18px);
+}
+
+.glass-field {
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: rgba(2, 6, 23, 0.46);
+}
+
+.muted-label {
+  color: rgb(148 163 184);
+}

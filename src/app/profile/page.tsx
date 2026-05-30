@@ -16,10 +16,10 @@ export default function ProfilePage() {
     <AppShell>
       <section className="grid gap-4">
         <h1 className="text-2xl font-semibold">Profile</h1>
-        <div className="rounded-md border border-slate-800 bg-slate-900 p-4">
+        <div className="glass-panel rounded-md p-4">
           <p className="text-lg font-medium">{user?.name || "Loading..."}</p>
           <p className="text-sm text-slate-400">{user?.email}</p>
-          <p className="mt-3 text-sm text-teal-300">{user?.role}</p>
+          <p className="mt-3 text-sm text-teal-300">{user?.role === "ADMIN" ? "Parent" : user?.role}</p>
         </div>
       </section>
     </AppShell>

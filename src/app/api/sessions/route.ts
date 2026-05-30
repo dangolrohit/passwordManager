@@ -1,10 +1,10 @@
-import { requireAdmin } from "@/lib/auth";
+import { requireParent } from "@/lib/auth";
 import { handleError, json } from "@/lib/http";
 import { getPrisma } from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const user = await requireAdmin();
+    const user = await requireParent();
     const sessions = await getPrisma().extensionSession.findMany({
       where: { familyMember: { adminId: user.id } },
       select: {

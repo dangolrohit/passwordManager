@@ -7,7 +7,7 @@ export default function PasswordsPage() {
   return (
     <AppShell>
       <ResourcePage
-        title="Manage Passwords"
+        title="Passwords"
         description="Review and add vault items without exposing encrypted values or hashes."
         endpoint="/api/passwords"
         listKey="passwords"

@@ -77,7 +77,7 @@ export function ResourcePage({ title, description, endpoint, listKey, submitLabe
         <h1 className="text-2xl font-semibold">{title}</h1>
         <p className="mt-1 text-sm text-slate-400">{description}</p>
       </header>
-      <form onSubmit={submit} className="grid gap-4 rounded-md border border-slate-800 bg-slate-900/50 p-4">
+      <form onSubmit={submit} className="glass-panel grid gap-4 rounded-md p-4">
         <div className="grid gap-4 md:grid-cols-2">
           {fields.map((field) =>
             field.textarea ? (
@@ -106,14 +106,14 @@ export function ResourcePage({ title, description, endpoint, listKey, submitLabe
           {message && <span className="text-sm text-slate-400">{message}</span>}
         </div>
       </form>
-      <div className="overflow-hidden rounded-md border border-slate-800">
-        <div className="border-b border-slate-800 bg-slate-900 px-4 py-3 text-sm font-medium">Records</div>
+      <div className="glass-panel overflow-hidden rounded-md">
+        <div className="border-b border-white/10 px-4 py-3 text-sm font-medium">Records</div>
         {loading ? (
           <div className="p-4 text-sm text-slate-400">Loading...</div>
         ) : items.length === 0 ? (
           <div className="p-4 text-sm text-slate-400">No records yet.</div>
         ) : (
-          <div className="divide-y divide-slate-800">
+          <div className="divide-y divide-white/10">
             {items.map((item) => (
               <div key={String(item.id)} className="grid gap-1 px-4 py-3 text-sm sm:grid-cols-3">
                 <strong>{String(item.platformName || item.name || item.keyPrefix || item.action || item.id)}</strong>

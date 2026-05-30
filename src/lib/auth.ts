@@ -71,7 +71,7 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
   return user;
 }
 
-export async function requireAdmin() {
+export async function requireParent() {
   const user = await getCurrentUser();
   if (!user || user.role !== "ADMIN") {
     throw new Response("Unauthorized", { status: 401 });

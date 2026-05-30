@@ -27,11 +27,11 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="grid min-h-screen place-items-center bg-slate-950 px-4 text-slate-100">
-      <form onSubmit={submit} className="grid w-full max-w-md gap-4 rounded-md border border-slate-800 bg-slate-900 p-6">
+    <main className="glass-shell grid min-h-screen place-items-center px-4 text-slate-100">
+      <form onSubmit={submit} className="glass-panel grid w-full max-w-md gap-4 rounded-md p-6">
         <div>
-          <h1 className="text-2xl font-semibold">Create Family Head</h1>
-          <p className="mt-1 text-sm text-slate-400">Your account starts as the admin for this vault.</p>
+          <h1 className="text-2xl font-semibold">Create Parent Account</h1>
+          <p className="mt-1 text-sm text-slate-400">Your account controls the family vault.</p>
         </div>
         <Field label="Name" name="name" required />
         <Field label="Email" name="email" type="email" required />

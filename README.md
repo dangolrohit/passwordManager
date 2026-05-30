@@ -1,6 +1,6 @@
 # Family Password Manager
 
-A full-stack Next.js App Router password manager for a family admin and family members. The browser extension is not included yet; extension-ready APIs are implemented for future integration.
+A full-stack Next.js App Router password manager for a parent and family members. The browser extension is not included yet; extension-ready APIs are implemented for future integration.
 
 ## Stack
 
@@ -105,7 +105,8 @@ API keys and extension:
 - `POST /api/extension/login`
 - `GET /api/extension/passwords`
 - `POST /api/extension/update-password`
-- `POST /api/admin/sessions/:id/revoke`
+- `POST /api/parent/sessions/:id/revoke`
+- `GET /api/health`
 
 ## Security Notes
 
@@ -114,4 +115,4 @@ API keys and extension:
 - API keys and extension session tokens are hashed before storage.
 - Generated API keys are returned only once.
 - Extension login marks an API key as used immediately.
-- Admin pages are protected by cookie-based route proxying and API-level auth checks.
+- Parent pages are protected by cookie-based route proxying and API-level auth checks.
