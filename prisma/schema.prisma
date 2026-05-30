@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  MEMBER
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         UserRole @default(ADMIN)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  familyMembers FamilyMember[] @relation("AdminFamilyMembers")
+  passwords     PasswordItem[]
+  assignments   AssignedPassword[] @relation("AssignedBy")
+  auditLogs     AuditLog[]
+}
+
+model FamilyMember {
+  id        String   @id @default(cuid())
+  adminId   String
+  name      String
+  email     String?
+  relation  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  admin             User                @relation("AdminFamilyMembers", fields: [adminId], references: [id], onDelete: Cascade)
+  assignedPasswords AssignedPassword[]
+  apiKeys           ApiKey[]
+  extensionSessions ExtensionSession[]
+  auditLogs         AuditLog[]
+
+  @@index([adminId])
+}
+
+model PasswordItem {
+  id                String   @id @default(cuid())
+  adminId           String
+  platformName      String
+  websiteUrl        String
+  username          String?
+  email             String?
+  phone             String?
+  encryptedPassword String
+  iv                String
+  authTag           String
+  notes             String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  admin       User               @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  assignments AssignedPassword[]
+  auditLogs   AuditLog[]
+
+  @@index([adminId])
+}
+
+model AssignedPassword {
+  id             String   @id @default(cuid())
+  passwordId     String
+  familyMemberId String
+  assignedById   String
+  createdAt      DateTime @default(now())
+
+  password     PasswordItem  @relation(fields: [passwordId], references: [id], onDelete: Cascade)
+  familyMember FamilyMember  @relation(fields: [familyMemberId], references: [id], onDelete: Cascade)
+  assignedBy   User          @relation("AssignedBy", fields: [assignedById], references: [id], onDelete: Cascade)
+
+  @@unique([passwordId, familyMemberId])
+  @@index([familyMemberId])
+  @@index([assignedById])
+}
+
+model ApiKey {
+  id             String    @id @default(cuid())
+  familyMemberId String
+  keyHash        String
+  keyPrefix      String
+  isUsed         Boolean   @default(false)
+  usedAt         DateTime?
+  expiresAt      DateTime?
+  createdAt      DateTime  @default(now())
+
+  familyMember FamilyMember @relation(fields: [familyMemberId], references: [id], onDelete: Cascade)
+
+  @@index([familyMemberId])
+  @@index([keyPrefix])
+}
+
+model ExtensionSession {
+  id             String    @id @default(cuid())
+  familyMemberId String
+  tokenHash      String
+  deviceName     String?
+  browserName    String?
+  isActive       Boolean   @default(true)
+  revokedAt      DateTime?
+  createdAt      DateTime  @default(now())
+  lastUsedAt     DateTime?
+
+  familyMember FamilyMember @relation(fields: [familyMemberId], references: [id], onDelete: Cascade)
+
+  @@index([familyMemberId])
+  @@index([tokenHash])
+}
+
+model AuditLog {
+  id             String   @id @default(cuid())
+  adminId        String
+  actorType      String
+  actorName      String
+  action         String
+  passwordId     String?
+  familyMemberId String?
+  metadata       Json?
+  createdAt      DateTime @default(now())
+
+  admin        User          @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  password     PasswordItem? @relation(fields: [passwordId], references: [id], onDelete: SetNull)
+  familyMember FamilyMember? @relation(fields: [familyMemberId], references: [id], onDelete: SetNull)
+
+  @@index([adminId])
+  @@index([action])
+}
